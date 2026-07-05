@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <script id="sap-ui-bootstrap" src="https://ui5.sap.com/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
+        data-sap-ui-libs="sap.m">
+        </script>
+
+    <script>
+
+        sap.ui.getCore().attachInit(function () {
+
+            var employeeData = [
+                {
+                    id: "1001",
+                    name: "John Doe",
+                    department: "IT",
+                    location: "Berlin"
+                },
+                {
+                    id: "1002",
+                    name: "Jane Smith",
+                    department: "HR",
+                    location: "Munich"
+                },
+                {
+                    id: "1003",
+                    name: "Michael Lee",
+                    department: "Finance",
+                    location: "Hamburg"
+                },
+                {
+                    id: "1004",
+                    name: "Sarah Johnson",
+                    department: "Sales",
+                    location: "Frankfurt"
+                }
+            ];
+
+            var oModel = new sap.ui.model.json.JSONModel({
+                employees: employeeData
+            });
+
+            function createTable() {
+
+                return new sap.m.Table({
+
+                    id: "employeeTable",
+
+                    growing: true,
+
+                    columns: [
+
+                        new sap.m.Column({
+                            header: new sap.m.Label({
+                                text: "ID"
+                            })
+                        }),
+
+                        new sap.m.Column({
+                            header: new sap.m.Label({
+                                text: "Name"
+                            })
+                        }),
+
+                        new sap.m.Column({
+                            header: new sap.m.Label({
+                                text: "Department"
+                            })
+                        }),
+
+                        new sap.m.Column({
+                            header: new sap.m.Label({
+                                text: "Location"
+                            })
+                        })
+
+                    ],
+
+                    items: {
+                        path: "/employees",
+                        template: new sap.m.ColumnListItem({
+
+                            type: "Active",
+
+                            press: function (oEvent) {
+
+                                var ctx =
+                                    oEvent.getSource()
+                                        .getBindingContext();
+
+                                var emp =
+                                    ctx.getObject();
+
+                                new sap.m.Dialog({
+
+                                    title: emp.name,
+
+                                    content: [
+
+                                        new sap.m.Text({
+                                            text:
+                                                "ID: " + emp.id
+                                        }),
+
+                                        new sap.m.Text({
+                                            text:
+                                                "Department: "
+                                                + emp.department
+                                        }),
+
+                                        new sap.m.Text({
+                                            text:
+                                                "Location: "
+                                                + emp.location
+                                        })
+
+                                    ],
+
+                                    beginButton:
+                                        new sap.m.Button({
+
+                                            text: "Close",
+
+                                            press: function () {
+                                                this.getParent().close();
+                                            }
+
+                                        })
+
+                                }).open();
+
+                            },
+
+                            cells: [
+
+                                new sap.m.Text({
+                                    text: "{id}"
+                                }),
+
+                                new sap.m.Text({
+                                    text: "{name}"
+                                }),
+
+                                new sap.m.Text({
+                                    text: "{location}"
+                                })
+
+                            ]
+
+                        })
+                    }
+
+                });
+
+            }
+
+            var oTable = createTable();
+
+            var oPage = new sap.m.Page({
+
+                title: "HR Employee Management",
+
+                content: [
+
+                    new sap.m.ObjectHeader({
+
+                        title:
+                            "Employee Management Dashboard",
+
+                        intro:
+                            "SAP Fiori Portfolio",
+
+                        number:
+                            employeeData.length,
+
+                        numberUnit:
+                            "Employees"
+
+                    }),
+
+                    new sap.m.Panel({
+
+                        headerText:
+                            "KPI Dashboard",
+
+                        content: [
+
+                            new sap.m.Text({
+                                text:
+                                    "Active Employees: 241"
+                            }),
+
+                            new sap.m.Text({
+                                text:
+                                    "Employees On Leave: 6"
+                            }),
+
+                            new sap.m.Text({
+                                text:
+                                    "Open Positions: 14"
+                            }),
+
+                            new sap.m.Text({
+                                text:
+                                    "New Hires This Month: 12"
+                            })
+
+                        ]
+
+                    }),
+
+                    new sap.m.SearchField({
+
+                        width: "100%",
+
+                        placeholder:
+                            "Search Employee",
+
+                        liveChange:
+                            function (oEvent) {
+
+                                var value =
+                                    oEvent.getParameter(
+                                        "newValue"
+                                    );
+
+                                var binding =
+                                    oTable.getBinding(
+                                        "items"
+                                    );
+
+                                var filter =
+                                    new sap.ui.model.Filter(
+                                        "name",
+                                        sap.ui.model.FilterOperator.Contains,
+                                        value
+                                    );
+
+                                binding.filter(
+                                    value ? [filter] : []
+                                );
+
+                            }
+
+                    }),
+
+                    oTable,
+
+                    new sap.m.Toolbar({
+
+                        content: [
+
+                            new sap.m.Button({
+
+                                text:
+                                    "Add Employee",
+
+                                type:
+                                    "Emphasized",
+
+                                icon:
+                                    "sap-icon://add",
+
+                                press:
+                                    function () {
+
+                                        var nameInput =
+                                            new sap.m.Input();
+
+                                        var deptInput =
+                                            new sap.m.Input();
+
+                                        var locInput =
+                                            new sap.m.Input();
+
+                                        new sap.m.Dialog({
+
+                                            title:
+                                                "Create Employee",
+
+                                            content: [
+
+                                                new sap.m.Label({
+                                                    text:
+                                                        "Name"
+                                                }),
+
+                                                nameInput,
+
+                                                new sap.m.Label({
+                                                    text:
+                                                        "Department"
+                                                }),
+
+                                                deptInput,
+
+                                                new sap.m.Label({
+                                                    text:
+                                                        "Location"
+                                                }),
+
+                                                locInput
+
+                                            ],
+
+                                            beginButton:
+                                                new sap.m.Button({
+
+                                                    text:
+                                                        "Save",
+
+                                                    press:
+                                                        function () {
+
+                                                            var data =
+                                                                oModel.getData();
+
+                                                            data.employees.push({
+
+                                                                id:
+                                                                    Date.now()
+                                                                        .toString(),
+
+                                                                name:
+                                                                    nameInput.getValue(),
+
+                                                                department:
+                                                                    deptInput.getValue(),
+
+                                                                location:
+                                                                    locInput.getValue()
+
+                                                            });
+
+                                                            oModel.refresh();
+
+                                                            this.getParent().close();
+
+                                                        }
+
+                                                }),
+
+                                            endButton:
+                                                new sap.m.Button({
+
+                                                    text:
+                                                        "Cancel",
+
+                                                    press:
+                                                        function () {
+                                                            this.getParent().close();
+                                                        }
+
+                                                })
+
+                                        }).open();
+
+                                    }
+
+                            }),
+
+                            new sap.m.Button({
+
+                                text:
+                                    "Refresh",
+
+                                icon:
+                                    "sap-icon://refresh",
+
+                                press:
+                                    function () {
+
+                                        sap.m.MessageToast.show(
+                                            "Data Refreshed"
+                                        );
+
+                                    }
+
+                            }),
+
+                            new sap.m.Button({
+
+                                text:
+                                    "Delete Last",
+
+                                icon:
+                                    "sap-icon://delete",
+
+                                type:
+                                    "Negative",
+
+                                press:
+                                    function () {
+
+                                        var data =
+                                            oModel.getData();
+
+                                        if (
+                                            data.employees.length > 0
+                                        ) {
+
+                                            data.employees.pop();
+
+                                            oModel.refresh();
+
+                                            sap.m.MessageToast.show(
+                                                "Employee Deleted"
+                                            );
+
+                                        }
+
+                                    }
+
+                            })
+
+                        ]
+
+                    })
+
+                ]
+
+            });
+
+            oPage.setModel(oModel);
+
+            new sap.m.App({
+                pages: [oPage]
+            }).placeAt("content");
+
+        });
+
+    </script>
+</head>
+
+<body class="sapUiBody" id="content"></body>
+
+</html>
