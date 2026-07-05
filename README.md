@@ -1,2 +1,19 @@
-# sapui5-employee-management-dashboard
-SAPUI5 Employee Management Dashboard featuring KPI analytics, employee CRUD operations, search, filtering and responsive layouts. `
+# Enterprise Workforce Management
+
+A SAPUI5 employee management dashboard built as a portfolio project.
+
+## Features
+
+- Employee Dashboard
+- KPI Analytics
+- Employee Search
+- Create Employee
+- Delete Employee
+- Responsive Layout
+
+## Technologies
+
+- SAPUI5
+- JavaScript
+- HTML
+- VS Code
